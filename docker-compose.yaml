@@ -1,0 +1,6 @@
+version: '3'
+
+services:
+  elastalert-k8s:
+    build: .
+    image: dkondyrev/elastalert-k8s-automation:latest

@@ -15,5 +15,5 @@ minikube start
 ```
 Then you can run:
 ```
-kubectl apply -f deploy.yaml
+kubectl apply -f deploy/deploy.yaml
 ```

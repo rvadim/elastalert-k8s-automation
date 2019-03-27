@@ -1,0 +1,18 @@
+type: object
+properties:
+    es_host:
+        type: string
+    es_port:
+        type: integer
+    index:
+        type: string
+    type:
+        type: string
+    alert:
+        type: string
+required:
+    - es_host
+    - es_port
+    - index
+    - type
+    - alert

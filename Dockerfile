@@ -1,11 +1,13 @@
-FROM ubuntu:18.04
+FROM python:3.7
 
-RUN apt-get update && apt-get upgrade -y
-RUN apt-get -y install python3.6 python3-pip
+LABEL description="Elastalert automation configuration"
+LABEL maintainer="Dmitriy Kondyrev (dkondyrev@gmail.com)"
+LABEL source="https://github.com/rvadim/elastalert-k8s-automation"
 
 WORKDIR /home/kubernetes
 
+ADD main.py ./
 ADD requirements.txt ./
-RUN pip3 install -r requirements.txt
+RUN pip install -r requirements.txt
 
 CMD ["python3", "main.py"]

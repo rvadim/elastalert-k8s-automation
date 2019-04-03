@@ -1,2 +1,24 @@
-es_host: 127.0.0.1
+# string value
+es_host: elasticsearch.example.com
+
+# numeric value
 es_port: 9200
+
+# string value
+rules_folder: example_rules
+
+# timeunit value
+run_every:
+  milliseconds: 222
+  seconds: 11
+  minutes: 22.3
+  hours: 333333333333
+  
+# timeunit value
+buffer_time:
+  schedule: cronSchedule
+  days: 42
+  weeks: 4
+
+# string value
+writeback_index: elastalert_status

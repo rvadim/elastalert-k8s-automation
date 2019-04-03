@@ -1,12 +1,12 @@
 from __future__ import print_function
-import time
-from pprint import pprint
+
+import base64
+import random
+import string
+import uuid
+
 from kubernetes import client, config
 from kubernetes.client.rest import ApiException
-import base64
-import uuid
-import string
-import random
 
 
 def create_secret(api_token_dir, accessing_kubernetes_api_url, namespace, metadata, data):

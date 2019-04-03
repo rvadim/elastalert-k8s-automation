@@ -1,4 +1,4 @@
-from kubernetes import client, config
+from kubernetes import client
 from kubernetes.client.rest import ApiException
 
 
@@ -6,7 +6,8 @@ def get_configmap_from_namespace(api_token_dir: str, accessing_kubernetes_api_ur
     """
     :param api_token_dir: directory to your ApiToken
         Note: to get ApiToken use bash command below:
-            kubectl describe secret $(kubectl get secrets | grep default | cut -f1 -d ' ') | grep -E '^token' | cut -f2 -d':' | tr -d '\t'
+    kubectl describe secret $(kubectl get secrets | grep default | cut -f1 -d ' ') \
+    | grep -E '^token' | cut -f2 -d':' | tr -d '\t'
     :type api_token_dir: str
     :param accessing_kubernetes_api_url: url that provides access to kubernetes api
         Note: to access kubernetes api use command below
@@ -24,7 +25,10 @@ def get_configmap_from_namespace(api_token_dir: str, accessing_kubernetes_api_ur
     configuration.verify_ssl = False
     api_instance = client.CoreV1Api(client.ApiClient(configuration))
     try:
-        api_response = api_instance.list_namespaced_config_map(namespace_name, pretty='true', limit=56, timeout_seconds=56)
+        api_response = api_instance.list_namespaced_config_map(namespace_name,
+                                                               pretty='true',
+                                                               limit=56,
+                                                               timeout_seconds=56)
         print(api_response)
         return True
     except ApiException as e:

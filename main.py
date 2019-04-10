@@ -51,7 +51,7 @@ def main():
 
     config.load_incluster_config()
     configuration = kubernetes.client.Configuration()
-    user_configs = read_config_files(configuration)
+    read_config_files(configuration)
 
 
 if __name__ == "__main__":

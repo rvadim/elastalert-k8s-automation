@@ -9,3 +9,10 @@ services:
       context: .
       dockerfile: Dockerfile.elastalert
     image: dkondyrev/elastalert:latest
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.7.1
+    environment:
+      - "discovery.type=single-node"
+    ports:
+      - "9200:9200"
+      - "9300:9300"

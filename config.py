@@ -30,6 +30,7 @@ def validate(config):
         errors.append(v(config))
     return filter(lambda x: x is not None, errors)
 
+
 @validator
 def check_es_host(config):
     if config.get('es_host') is None:
@@ -57,8 +58,8 @@ def check_es_port(config):
         return ConfigurationError(
             'es_port in configuration file is not in range({}), '
             'please specify es_port in range 1 < port < 65535'.format(port))
-  
-  
+
+
 def check_required(value, name):
     if value is None:
         raise ConfigurationError(

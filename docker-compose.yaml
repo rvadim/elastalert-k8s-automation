@@ -4,3 +4,8 @@ services:
   elastalert-k8s:
     build: .
     image: dkondyrev/elastalert-k8s-automation:latest
+  elastalert:
+    build:
+      context: .
+      dockerfile: Dockerfile.elastalert
+    image: dkondyrev/elastalert:latest

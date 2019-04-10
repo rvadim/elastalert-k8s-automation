@@ -20,12 +20,12 @@ def read_config_files(configuration):
     :return: list of user elastalert rules
     """
     api_instance = kubernetes.client.CoreV1Api(kubernetes.client.ApiClient(configuration))
-    configmap_list = api_instance.list_config_map_for_all_namespaces()
+    configmap_list = api_instance.list_config_map_for_all_namespaces(field_selector='metadata.name=elastalert-rules')
 
     user_configs = []
     for configmap in configmap_list:
-        if configmap.metadata.name == 'elastalert-rules':
-            for rule_name in configmap.data:
+        for rule_name in configmap.data:
+            try:
                 user_rule = yaml.safe_load(configmap.data[rule_name])
                 errors = validate_user_rule(user_rule)
                 if len(errors) != 0:
@@ -34,6 +34,8 @@ def read_config_files(configuration):
                     continue
 
                 user_configs.append(user_rule)
+            except yaml.YAMLError as e:
+                log.error(f'Failed to parse configuration. {e}')
 
     return user_configs
 

@@ -1,5 +1,6 @@
-import yaml
 import os
+import yaml
+
 
 class ConfigurationError(Exception):
     pass
@@ -11,6 +12,7 @@ def validators():
     def reg(func):
         registry[func.__name__] = func
         return func
+
     reg.all = registry
     return reg
 

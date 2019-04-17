@@ -8,6 +8,7 @@ import logging
 from config import parse_config
 from config import validate
 from config import validate_user_rule
+from config import get_env_vars_by_prefix
 
 logging.basicConfig(level=os.environ.get('LOG_LEVEL', logging.INFO))
 log = logging.getLogger(__name__)
@@ -43,7 +44,7 @@ def read_config_files(configuration):
 def main():
     config_path = os.environ.get('CONFIG', 'config.yaml')
     log.info('Reading configuration file "{}"...', config_path)
-    errors = validate(parse_config(config_path))
+    errors = validate(parse_config(config_path).update(get_env_vars_by_prefix()))
     if len(errors) != 0:
         for error in errors:
             log.error(error)

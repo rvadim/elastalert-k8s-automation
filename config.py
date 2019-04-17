@@ -1,5 +1,5 @@
 import yaml
-
+import os
 
 class ConfigurationError(Exception):
     pass
@@ -111,3 +111,13 @@ def validate_user_rule(user_rule):
     for _, v in rule_validator.all.items():
         errors.append(v(user_rule))
     return filter(lambda x: x is not None, errors)
+
+
+def get_env_vars_by_prefix():
+    env_vars = os.environ()
+    es_vars = dict()
+    prefix = 'EA_'
+    for key in env_vars.keys():
+        if key.startswith(prefix) and len(key) > len(prefix):
+            es_vars[key[len(prefix):-1]] = env_vars[key]
+    return es_vars

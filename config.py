@@ -117,7 +117,7 @@ def get_env_vars_by_prefix():
     env_vars = os.environ()
     es_vars = dict()
     prefix = 'EA_'
-    for key in env_vars.keys():
+    for key, value in env_vars.items():
         if key.startswith(prefix) and len(key) > len(prefix):
-            es_vars[key[len(prefix):-1]] = env_vars[key]
+            es_vars[key[len(prefix):-1]] = value
     return es_vars

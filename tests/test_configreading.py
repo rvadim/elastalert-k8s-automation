@@ -19,4 +19,5 @@ class TestAdminConfig:
         assert isinstance(errors[3], PropertyFormatError)
         assert isinstance(errors[4], PropertyFormatError)
         assert isinstance(errors[5], PropertyFormatError)
+        assert isinstance(errors[6], PropertyFormatError)
         assert (len(errors) == 6)

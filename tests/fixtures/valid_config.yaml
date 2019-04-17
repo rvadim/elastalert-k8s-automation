@@ -5,6 +5,9 @@ es_host: elasticsearch.example.com
 es_port: 9200
 
 # string value
+es_password: pass
+
+# string value
 rules_folder: example_rules
 
 # timeunit value

@@ -4,6 +4,9 @@ es_host:
 # Invalid  value
 es_port: 920000000000000000
 
+# Wrong type
+es_password: 11
+
 # This is the folder that contains the rule yaml files
 # Any .yaml file will be loaded as a rule
 rules_folder: 22

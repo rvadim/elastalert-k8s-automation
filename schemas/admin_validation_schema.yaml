@@ -21,6 +21,7 @@ type: object
 properties:
   es_host: {type: string}
   es_port: {type: integer}
+  es_password: {type: string}
   writeback_index: {type: string}
   rules_folder: {type: string}
   buffer_time: *timeframe

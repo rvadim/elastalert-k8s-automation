@@ -18,7 +18,26 @@ spec:
       labels:
         app: elastalert-k8s
     spec:
+      volumes:
+      - name: config-dir
+        emptyDir: {}
       containers:
       - image: dkondyrev/elastalert-k8s-automation:latest
         imagePullPolicy: IfNotPresent
         name: elastalert-k8s
+        volumeMounts:
+        - mountPath: /config
+          name: config-dir
+      - image: dkondyrev/elastalert:latest
+        imagePullPolicy: IfNotPresent
+        name: elastalert
+        volumeMounts:
+        - mountPath: /config
+          name: config-dir
+        command:
+          - python
+          - -m
+          - elastalert.elastalert
+          - --config
+          - /config/config.yaml
+

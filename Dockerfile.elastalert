@@ -1,0 +1,8 @@
+FROM python:2.7
+
+LABEL description="Python 2.7 with elastalert installed"
+LABEL maintainer="Dmitriy Kondyrev (dkondyrev@gmail.com)"
+LABEL source="https://github.com/rvadim/elastalert-k8s-automation"
+
+RUN pip install --no-cache-dir elastalert
+

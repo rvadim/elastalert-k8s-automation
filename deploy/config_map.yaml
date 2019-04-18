@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ea-config
+data:
+  config.yaml: |
+    es_host: 127.0.0.1
+    es_port: 80
+    rules_folder: /config/rules

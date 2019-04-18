@@ -21,13 +21,28 @@ spec:
       volumes:
       - name: config-dir
         emptyDir: {}
+      - name: admin-config
+        configMap:
+          name: ea-config
+      - name: user-rules-dir
+        emptyDir: {}
       containers:
       - image: dkondyrev/elastalert-k8s-automation:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         name: elastalert-k8s
+        env:
+          - name: CONFIG
+            value: /config/admin/config.yaml
         volumeMounts:
         - mountPath: /config
           name: config-dir
+
+        - mountPath: /config/admin
+          name: admin-config
+
+        - mountPath: /config/rules
+          name: user-rules-dir
+
       - image: dkondyrev/elastalert:latest
         imagePullPolicy: IfNotPresent
         name: elastalert

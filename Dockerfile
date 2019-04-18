@@ -6,8 +6,10 @@ LABEL source="https://github.com/rvadim/elastalert-k8s-automation"
 
 WORKDIR /home/kubernetes
 
-ADD main.py ./
 ADD requirements.txt ./
 RUN pip install -r requirements.txt
+
+ADD main.py ./
+ADD config.py ./
 
 CMD ["python3", "main.py"]

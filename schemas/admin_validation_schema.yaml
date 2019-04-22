@@ -1,0 +1,28 @@
+#admin config validation scheme
+
+$schema: http://json-schema.org/draft-04/schema#
+definitions:
+  timeFrame: &timeframe
+    type: object
+    additionalProperties: false
+    properties:
+      days: {type: number}
+      weeks: {type: number}
+      hours: {type: number}
+      minutes: {type: number}
+      seconds: {type: number}
+      milliseconds: {type: number}
+      schedule: {type: string}
+
+#required: [type, index, alert]
+type: object
+
+
+properties:
+  es_host: {type: string}
+  es_port: {type: integer}
+  es_password: {type: string}
+  writeback_index: {type: string}
+  rules_folder: {type: string}
+  buffer_time: *timeframe
+  run_every: *timeframe

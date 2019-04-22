@@ -1,2 +1,25 @@
-es_host:
-es_port: 0
+# Property has no value
+es_host: 
+
+# Invalid  value
+es_port: 920000000000000000
+
+# Wrong type
+es_password: 11
+
+# This is the folder that contains the rule yaml files
+# Any .yaml file will be loaded as a rule
+rules_folder: 22
+
+# Some timeunit have wrong type
+run_every:
+  minutes: bb
+  hours: 111
+  seconds: aa
+
+# Wrong timeunit naming
+buffer_time:
+  mntes: 12
+
+# Wrong type
+writeback_index: 11

@@ -81,6 +81,8 @@ def main():
     local_run = os.environ.get('LOCAL_RUN') == 'True'
     if local_run:
         local_config_directory = os.environ.get('LOCAL_CONFIG_DIR')
+    else:
+        configuration = config.load_incluster_config()
 
     config_path = os.environ.get('CONFIG', 'config.yaml')
     log.info(f'Reading configuration file "{config_path}"...')
@@ -94,9 +96,6 @@ def main():
         sys.exit(1)
 
     user_rules_directory = parsed_config['rules_folder']
-
-    if not local_run:
-        configuration = config.load_incluster_config()
 
     while True:
         # Drop all files from user rules directory

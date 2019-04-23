@@ -39,6 +39,8 @@ def read_config_files(configuration):
                         log.error(error)
                     continue
 
+                log.info(f'User rule:\n{yaml.dump(user_rule)}')
+
                 user_configs.append(user_rule)
             except yaml.YAMLError as e:
                 log.error(f'Failed to parse configuration. {e}')
@@ -53,7 +55,7 @@ def dump_config(config_data, filename):
 
 def main():
     config_path = os.environ.get('CONFIG', 'config.yaml')
-    log.info('Reading configuration file "{}"...', config_path)
+    log.info(f'Reading configuration file "{config_path}"...')
     parsed_config = parse_config(config_path)
     parsed_config.update(get_env_vars_by_prefix())
     errors = list(validate(parsed_config))
@@ -63,21 +65,15 @@ def main():
             log.error(error)
         sys.exit(1)
 
-    # dump_config(admin_config, '/conf/config.yaml')
     user_rules_directory = parsed_config['rules_folder']
 
-    config.load_incluster_config()
+    configuration = config.load_incluster_config()
 
     while True:
         # Drop all files from user rules directory
         for f in os.listdir(user_rules_directory):
             f_path = os.path.join(user_rules_directory, f)
             os.remove(f_path)
-
-        configuration = kubernetes.client.Configuration()
-
-        tmp_token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImFkbWluLXRva2VuLTdua2Q1Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiZmMzNjE5YWUtNjBlNC0xMWU5LWI1YjgtMDgwMDI3MzY4NmRmIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmRlZmF1bHQ6YWRtaW4ifQ.KoR048vGr-ec9oOzNnKWhjNfimdan1lnzTLJzo90drUMr-c5Oy1SQ000WBbxZG2kCBAKzGkbVAMtf-4YY7BZAprXSiHWFRbXgc_MWOyGe3dEb4okOQmgqiqyApb_50oEdMO3qWmMvl5y6x5PIdl0qCVIumMrQxy_vmrsXiDrYPlPVEzn9WHGES5s4lqBb4oaOGb8x4E1YvNwz4EqlK1uxjrIqqNQihGSI_v6sFBeQqtMu4PJpU9gQDVULOXOcWB0XJhvtWFknXiBGvsMOXns4p1goNxlXER44EZCRnBnlYOvii4khyQ7Sdd9q7DjwdGuD6yvRBOBoMc7TqctGnYV_Q"
-        configuration.api_key['authorization'] = tmp_token
 
         user_rules = read_config_files(configuration)
 

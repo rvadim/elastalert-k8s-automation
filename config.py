@@ -63,7 +63,7 @@ def parse_config(path):
 
 
 def get_env_vars_by_prefix():
-    env_vars = os.environ()
+    env_vars = os.environ
     es_vars = dict()
     prefix = 'EA_'
     for key, value in env_vars.items():

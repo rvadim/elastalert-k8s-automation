@@ -5,5 +5,16 @@ metadata:
 data:
   config.yaml: |
     es_host: 127.0.0.1
-    es_port: 80
+    es_port: 9200
+    es_password: "1234"
+
     rules_folder: /config/rules
+
+    buffer_time:
+        minutes: 15
+        seconds: 30
+
+    writeback_index: elastalert_status
+
+    run_every:
+        seconds: 30

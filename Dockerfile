@@ -11,6 +11,6 @@ RUN pip install -r requirements.txt
 
 ADD main.py ./
 ADD config.py ./
-ADD ./schemas/admin_validation_schema.yaml ./schemas/
+ADD schemas ./schemas
 
 CMD ["python3", "main.py"]

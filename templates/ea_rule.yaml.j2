@@ -1,0 +1,32 @@
+{%if name is defined and name|length%}
+name: {{name}}
+{% endif %}
+
+index: {{index}}
+
+type: {{type}}
+
+{% if type == "frequency" %}
+timeframe:
+{% for timeunit, timevalue in timeframe.items() %}
+    {{timeunit}}: {{timevalue}}
+{% endfor %}
+num_events: {{num_events}}
+{% endif %}
+
+alert:
+{% for item in alert%}
+- {{item}}
+{% endfor %}
+
+{% if "email" in alert %}
+email:
+{% for item in email%}
+- {{item}}
+{% endfor %}
+{% endif %}
+
+{% if "telegram" in alert %}
+telegram_bot_token: {{telegram_bot_token}}
+telegram_room_id: {{telegram_room_id}}
+{% endif %}

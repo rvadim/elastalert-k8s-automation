@@ -128,7 +128,7 @@ def check_es_port(config):
 def check_password(config):
     prop_name = 'es_password'
     if not config.get(prop_name):
-        return PropertyNotExistError(prop_name)
+        return None
     return check_property_format(config, prop_name)
 
 

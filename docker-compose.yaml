@@ -21,10 +21,6 @@ services:
     image: dkondyrev/elastalert:latest
     volumes:
       - 'data:/config/'
-    command:
-      - /bin/bash
-      - -c
-      - elastalert-create-index --config /config/config.yaml && elastalert --verbose --config /config/config.yaml
 #  es:
     #image: docker.elastic.co/elasticsearch/elasticsearch:6.7.1
     #environment:

@@ -25,12 +25,18 @@ def read_config_files(configuration):
     log.info('Reading users configuration files')
 
     api_instance = kubernetes.client.CoreV1Api(kubernetes.client.ApiClient(configuration))
-    configmap_list = api_instance.list_config_map_for_all_namespaces(field_selector='metadata.name=elastalert-rules')
+    namespaces = api_instance.list_namespace()
+    configmap_list = []
+
+    for namespace in namespaces.items:
+        try:
+            configmap_list.append(api_instance.read_namespaced_config_map('elastalert-rules', namespace.metadata.name))
+        except Exception as e:
+            log.warning(e)
 
     user_configs = []
-    for configmap in configmap_list.items:
+    for configmap in configmap_list:
         for rule_name in configmap.data:
-            log.info(f'User rule:\n{yaml.dump(user_rule)}')
             log.info(f'Reading user rule {rule_name} from configmap {configmap.metadata.name}'
                      f' in namespace {configmap.metadata.namespace}')
             user_rule = read_user_rule(configmap.data[rule_name])
@@ -104,7 +110,7 @@ def generate_ea_rules(user_configs, env):
 def main():
     local_run = os.environ.get('LOCAL_RUN') == '1'
     config_dir = os.environ.get('CONFIG_DIR', './eka/')
-    ea_config_path = os.environ.get('EA_CONFIG_DIR', './config/')
+    ea_config_path = os.environ.get('ELASTALERT_CONFIG_DIR', '/config/')
     context = get_config(os.path.join(config_dir, 'config.yaml'))
     user_rules_directory = os.path.join(ea_config_path, 'rules')
     context['rules_folder'] = user_rules_directory

@@ -64,11 +64,11 @@ def parse_config(path):
 
 def get_env_vars_by_prefix():
     env_vars = os.environ
-    es_vars = dict()
+    es_vars = {}
     prefix = 'EA_'
     for key, value in env_vars.items():
         if key.startswith(prefix) and len(key) > len(prefix):
-            es_vars[key[len(prefix):-1]] = value
+            es_vars[key.replace('EA_', '').lower()] = value
     return es_vars
 
 

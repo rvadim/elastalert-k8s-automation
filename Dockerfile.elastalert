@@ -6,3 +6,5 @@ LABEL source="https://github.com/rvadim/elastalert-k8s-automation"
 
 RUN pip install --no-cache-dir  elasticsearch==5.5.3 urllib3==1.24 elastalert
 
+CMD ["/bin/bash", "-c", "elastalert-create-index --config /config/config.yaml && elastalert --verbose --config /config/config.yaml"]
+

@@ -1,0 +1,17 @@
+es_host: {{es_host}}
+
+es_port: {{es_port}}
+
+rules_folder: {{rules_folder}}
+
+writeback_index: {{writeback_index}}
+
+buffer_time:
+{% for timeunit, timevalue in buffer_time.items() %}
+    {{timeunit}}: {{timevalue}}
+{% endfor %}
+
+run_every:
+{%  for timeunit, timevalue in buffer_time.items() %}
+    {{timeunit}}: {{timevalue}}
+{% endfor %}

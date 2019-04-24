@@ -6,6 +6,7 @@ from kubernetes import config
 import kubernetes.client
 import yaml
 import logging
+from jinja2 import FileSystemLoader, Environment
 from config import parse_config
 from config import validate
 from config import validate_user_rule
@@ -13,22 +14,6 @@ from config import get_env_vars_by_prefix
 
 logging.basicConfig(level=os.environ.get('LOG_LEVEL', logging.INFO))
 log = logging.getLogger(__name__)
-
-
-def read_user_rule(rule_yaml):
-    try:
-        user_rule = yaml.safe_load(rule_yaml)
-        errors = list(validate_user_rule(user_rule))
-        if len(errors) != 0:
-            for error in errors:
-                log.error(error)
-            return None
-
-        log.info(f'User rule:\n{yaml.dump(user_rule)}')
-
-        return user_rule
-    except yaml.YAMLError as e:
-        log.error(f'Failed to parse configuration. {e}')
 
 
 def read_config_files(configuration):
@@ -45,45 +30,26 @@ def read_config_files(configuration):
     user_configs = []
     for configmap in configmap_list.items:
         for rule_name in configmap.data:
-            log.info(f'Reading user rule {rule_name} from configmap {configmap.metadata.name}'
-                     f' in namespace {configmap.metadata.namespace}')
-            user_rule = read_user_rule(configmap.data[rule_name])
-            if user_rule is not None:
+            try:
+                log.info(f'Reading user rule {rule_name} from configmap {configmap.metadata.name}'
+                         f' in namespace {configmap.metadata.namespace}')
+                user_rule = yaml.safe_load(configmap.data[rule_name])
+                errors = list(validate_user_rule(user_rule))
+                if len(errors) != 0:
+                    for error in errors:
+                        log.error(error)
+                    continue
+
+                log.info(f'User rule:\n{yaml.dump(user_rule)}')
+
                 user_configs.append(user_rule)
+            except yaml.YAMLError as e:
+                log.error(f'Failed to parse configuration. {e}')
 
     return user_configs
 
 
-def read_local_config_files(directory):
-    """
-    Read configuration files from local directory
-    :param directory: local directory
-    :return: list of user elastalert rules
-    """
-    user_configs = []
-    for file in os.listdir(directory):
-        f_path = os.path.join(directory, file)
-        with open(f_path, 'r') as f:
-            log.info(f'Reading user rule from file {file}')
-            user_rule = read_user_rule(f)
-            if user_rule is not None:
-                user_configs.append(user_rule)
-
-    return user_configs
-
-
-def dump_config(config_data, filename):
-    with open(filename, 'w') as f:
-        yaml.dump(config_data, f)
-
-
-def main():
-    local_run = os.environ.get('LOCAL_RUN') == 'True'
-    if local_run:
-        local_config_directory = os.environ.get('LOCAL_CONFIG_DIR')
-    else:
-        configuration = config.load_incluster_config()
-
+def read_admin_config():
     config_path = os.environ.get('CONFIG', 'config.yaml')
     log.info(f'Reading configuration file "{config_path}"...')
     parsed_config = parse_config(config_path)
@@ -94,22 +60,50 @@ def main():
         for error in errors:
             log.error(error)
         sys.exit(1)
+    return parsed_config
 
-    user_rules_directory = parsed_config['rules_folder']
 
+def generate_config(config_data, template_name, env):
+    template = env.get_template(template_name)
+    return template.render(config_data)
+
+
+def generate_ea_rules(user_configs, env):
+    ea_rules = []
+    for conf in user_configs:
+        extended_conf = dict(conf)
+        extended_conf.update(get_env_vars_by_prefix())
+        ea_rules.append(generate_config(extended_conf, 'ea_rule_template', env))
+    return ea_rules
+
+
+def main():
+    admin_config = read_admin_config()
+
+    log.info('Write ElastAlert configuration...')
+    ea_config_path = os.environ.get('EA_CONFIG', 'ea_config.yaml')
+    if os.path.exists(ea_config_path) and os.path.isfile(ea_config_path):
+        os.remove(ea_config_path)
+
+    env = Environment(loader=FileSystemLoader('templates'))
+    with open(os.path.join(ea_config_path, f'ea_config.yaml'), 'w') as output:
+        output.write(generate_config(admin_config, 'ea_config.yaml.j2', env))
+
+    user_rules_directory = admin_config['rules_folder']
+
+    configuration = config.load_incluster_config()
     while True:
         # Drop all files from user rules directory
         for f in os.listdir(user_rules_directory):
             f_path = os.path.join(user_rules_directory, f)
             os.remove(f_path)
 
-        if not local_run:
-            user_rules = read_config_files(configuration)
-        else:
-            user_rules = read_local_config_files(local_config_directory)
+        user_configs = read_config_files(configuration)
+        ea_rules = generate_ea_rules(user_configs, env)
 
-        for i, rule in enumerate(user_rules):
-            dump_config(rule, os.path.join(user_rules_directory, f'config_{i}.yaml'))
+        for i, rule in enumerate(ea_rules):
+            with open(os.path.join(user_rules_directory, f'rule_{i}.yaml'), 'w') as output:
+                output.write(rule)
 
         time.sleep(60)
 

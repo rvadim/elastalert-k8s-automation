@@ -1,0 +1,127 @@
+import logging
+import os
+import sys
+from abc import abstractmethod
+
+import kubernetes.client
+import yaml
+
+from config import get_env_vars_by_prefix
+from config import parse_config
+from config import validate
+from config import validate_user_rule
+
+log = logging.getLogger("__main__")
+
+
+class BaseUsrConfigReader(object):
+    """
+    Base class for user config readers with common interface
+    """
+    def __init__(self):
+        pass
+
+    def _read_user_rule(self, rule_yaml):
+        """
+        Get raw yaml and validate it as user config file
+        :param rule_yaml: file to validate
+        :return: parsed and validated yaml
+        """
+        try:
+            user_rule = yaml.safe_load(rule_yaml)
+            errors = list(validate_user_rule(user_rule))
+            if len(errors) != 0:
+                for error in errors:
+                    log.error(error)
+                return None
+
+            return user_rule
+        except yaml.YAMLError as e:
+            log.error(f'Failed to parse configuration. {e}')
+
+    @abstractmethod
+    def get_config_files(self):
+        pass
+
+
+class RemoteUsrConfigReader(BaseUsrConfigReader):
+    """
+    Class for reading user configuration files in kubernetes cluster
+    """
+    def __init__(self, kubernetes_configuration):
+        super().__init__()
+        self.kubernetes_configuration = kubernetes_configuration
+
+    def get_config_files(self):
+        """
+        Read configuration files from configmaps in all available namespaces
+        :return: list of user elastalert rules
+        """
+        log.info('Reading users configuration files')
+
+        api_instance = kubernetes.client.CoreV1Api(kubernetes.client.ApiClient(self.kubernetes_configuration))
+        namespaces = api_instance.list_namespace()
+        configmap_list = []
+
+        for namespace in namespaces.items:
+            try:
+                configmap_list.append(
+                    api_instance.read_namespaced_config_map('elastalert-rules', namespace.metadata.name))
+            except Exception as e:
+                log.warning(e)
+
+        user_configs = []
+        for configmap in configmap_list:
+            for rule_name in configmap.data:
+                log.info(f'Reading user rule {rule_name} from configmap {configmap.metadata.name}'
+                         f' in namespace {configmap.metadata.namespace}')
+                user_rule = self._read_user_rule(configmap.data[rule_name])
+                if user_rule is not None:
+                    user_configs.append(user_rule)
+
+        return user_configs
+
+
+class LocalUsrConfigReader(BaseUsrConfigReader):
+    """
+    Class for reading user configuration files locally from disk
+    """
+    def __init__(self, directory):
+        super().__init__()
+        self.directory = directory
+
+    def get_config_files(self):
+        """
+        Read configuration files from local directory
+        :return: list of user elastalert rules
+        """
+        user_configs = []
+        for file in os.listdir(self.directory):
+            f_path = os.path.join(self.directory, file)
+            if os.path.isdir(file):
+                continue
+            with open(f_path, 'r') as f:
+                log.info(f'Reading user rule from file {file}')
+                user_rule = self._read_user_rule(f)
+                if user_rule is not None:
+                    user_configs.append(user_rule)
+
+        return user_configs
+
+
+def get_admin_config_file(config_path):
+    """
+    Get raw admin config file and validate it
+    :param config_path: path to config file
+    :return: parsed and validated config file
+    """
+    log.info(f'Reading configuration file "{config_path}"...')
+    parsed_config = parse_config(config_path)
+    parsed_config.update(get_env_vars_by_prefix())
+    errors = list(validate(parsed_config))
+
+    if len(errors) != 0:
+        for error in errors:
+            log.error(error)
+        sys.exit(1)
+    return parsed_config

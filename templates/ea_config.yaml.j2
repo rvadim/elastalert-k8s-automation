@@ -2,6 +2,14 @@ es_host: {{es_host}}
 
 es_port: {{es_port}}
 
+{% if es_username is defined %}
+es_username: {{ es_username }}
+{% endif %}
+
+{% if es_password is defined %}
+es_password: {{ es_password }}
+{% endif %}
+
 rules_folder: {{rules_folder}}
 
 writeback_index: {{writeback_index}}

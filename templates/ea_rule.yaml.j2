@@ -14,6 +14,8 @@ timeframe:
 num_events: {{num_events}}
 {% endif %}
 
+filter: {{ filter }}
+
 alert:
 {% for item in alert%}
 - {{item}}

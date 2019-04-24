@@ -133,14 +133,6 @@ def check_password(config):
 
 
 @validator
-def check_rules_folder(config):
-    prop_name = 'rules_folder'
-    if not config.get(prop_name):
-        return PropertyNotExistError(prop_name)
-    return check_property_format(config, prop_name)
-
-
-@validator
 def check_run_every(config):
     prop_name = 'run_every'
     if not config.get(prop_name):

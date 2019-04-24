@@ -4,15 +4,34 @@ services:
   elastalert-k8s:
     build: .
     image: dkondyrev/elastalert-k8s-automation:latest
+    environment:
+      LOG_LEVEL: DEBUG
+      LOCAL_RUN: '1'
+      EA_CONFIG_DIR: /config/
+      CONFIG_DIR: /local/
+    volumes:
+      - './local/:/local'
+      - 'data:/config/'
   elastalert:
+    depends_on:
+      - elastalert-k8s
     build:
       context: .
       dockerfile: Dockerfile.elastalert
     image: dkondyrev/elastalert:latest
-  es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.7.1
-    environment:
-      - "discovery.type=single-node"
-    ports:
-      - "9200:9200"
-      - "9300:9300"
+    volumes:
+      - 'data:/config/'
+    command:
+      - /bin/bash
+      - -c
+      - elastalert-create-index --config /config/config.yaml && elastalert --verbose --config /config/config.yaml
+#  es:
+    #image: docker.elastic.co/elasticsearch/elasticsearch:6.7.1
+    #environment:
+      #- "discovery.type=single-node"
+    #ports:
+      #- "9200:9200"
+      #- "9300:9300"
+
+volumes:
+  data:

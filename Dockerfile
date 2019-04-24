@@ -12,5 +12,6 @@ RUN pip install -r requirements.txt
 ADD main.py ./
 ADD config.py ./
 ADD schemas ./schemas
+ADD templates ./templates
 
 CMD ["python3", "main.py"]

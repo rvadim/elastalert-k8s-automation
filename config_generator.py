@@ -43,8 +43,5 @@ class Renderer:
             self.add_alerts_options(conf)
             rule_context = dict(conf)
             rule_context.update(get_env_vars_by_prefix())
-
-            print(rule_context)
-
             ea_rules.append(self._generate_config('ea_rule.yaml.j2', rule_context))
         return ea_rules

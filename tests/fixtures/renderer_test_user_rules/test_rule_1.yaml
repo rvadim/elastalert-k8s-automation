@@ -1,0 +1,15 @@
+es_host: 127.0.0.1
+es_port: 80
+index: test_index
+type: any
+alert:
+  - email:
+      email: example@gmail.com
+      email_config_name: mail_1
+  - email:
+      email: test@gmail.com
+      email_config_name: mail_2
+  - slack:
+      slack_username_override: test_user
+      slack_channel_override: test_channel
+      slack_config_name: slack_1

@@ -14,7 +14,17 @@ timeframe:
 num_events: {{num_events}}
 {% endif %}
 
-filter: {{ filter }}
+{% if filter is defined %}
+filter:
+{% for filt in filter %}
+{% for type, map in filt.items() %}
+- {{type}}:
+{% for key, val in map.items() %}
+    {{key}}: {{val}}
+{% endfor %}
+{% endfor %}
+{% endfor %}
+{% endif %}
 
 alert:
 {% for item in alert%}

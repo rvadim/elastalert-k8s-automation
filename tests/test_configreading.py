@@ -13,11 +13,10 @@ class TestAdminConfig:
 
     def test_invalid_config(self):
         errors = list(validate(parse_config('tests/fixtures/invalid_config.yaml')))
+        assert (len(errors) == 6)
         assert isinstance(errors[0], PropertyNotExistError)
         assert isinstance(errors[1], ConfigurationError)
         assert isinstance(errors[2], PropertyFormatError)
         assert isinstance(errors[3], PropertyFormatError)
         assert isinstance(errors[4], PropertyFormatError)
         assert isinstance(errors[5], PropertyFormatError)
-        assert isinstance(errors[6], PropertyFormatError)
-        assert (len(errors) == 7)

@@ -14,13 +14,10 @@ from config import validate_user_rule
 log = logging.getLogger("__main__")
 
 
-class BaseUsrConfigReader(object):
+class BaseConfigReader:
     """
     Base class for user config readers with common interface
     """
-    def __init__(self):
-        pass
-
     def _read_user_rule(self, rule_yaml):
         """
         Get raw yaml and validate it as user config file
@@ -28,28 +25,29 @@ class BaseUsrConfigReader(object):
         :return: parsed and validated yaml
         """
         try:
-            user_rule = yaml.safe_load(rule_yaml)
-            errors = list(validate_user_rule(user_rule))
-            if len(errors) != 0:
-                for error in errors:
-                    log.error(error)
-                return None
-
-            return user_rule
+            parsed_user_rule = yaml.safe_load(rule_yaml)
+            return parsed_user_rule
         except yaml.YAMLError as e:
             log.error(f'Failed to parse configuration. {e}')
+
+    def _validate_user_rule(self, parsed_user_rule):
+        errors = list(validate_user_rule(parsed_user_rule))
+        if len(errors) != 0:
+            for error in errors:
+                log.error(error)
+            return None
+        return parsed_user_rule
 
     @abstractmethod
     def get_config_files(self):
         pass
 
 
-class RemoteUsrConfigReader(BaseUsrConfigReader):
+class RemoteUserConfigReader(BaseConfigReader):
     """
     Class for reading user configuration files in kubernetes cluster
     """
     def __init__(self, kubernetes_configuration):
-        super().__init__()
         self.kubernetes_configuration = kubernetes_configuration
 
     def get_config_files(self):
@@ -76,18 +74,18 @@ class RemoteUsrConfigReader(BaseUsrConfigReader):
                 log.info(f'Reading user rule {rule_name} from configmap {configmap.metadata.name}'
                          f' in namespace {configmap.metadata.namespace}')
                 user_rule = self._read_user_rule(configmap.data[rule_name])
+                user_rule = self._validate_user_rule(user_rule)
                 if user_rule is not None:
                     user_configs.append(user_rule)
 
         return user_configs
 
 
-class LocalUsrConfigReader(BaseUsrConfigReader):
+class LocalUserConfigReader(BaseConfigReader):
     """
     Class for reading user configuration files locally from disk
     """
     def __init__(self, directory):
-        super().__init__()
         self.directory = directory
 
     def get_config_files(self):
@@ -103,6 +101,7 @@ class LocalUsrConfigReader(BaseUsrConfigReader):
             with open(f_path, 'r') as f:
                 log.info(f'Reading user rule from file {file}')
                 user_rule = self._read_user_rule(f)
+                user_rule = self._validate_user_rule(user_rule)
                 if user_rule is not None:
                     user_configs.append(user_rule)
 

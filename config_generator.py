@@ -6,9 +6,9 @@ def get_env(templates_dir):
     return Environment(loader=FileSystemLoader(templates_dir))
 
 
-class Renderer(object):
+class Renderer:
     """
-    Class for rendering Elast Alert configurations
+    Class for rendering ElastAlert configurations
     """
     def __init__(self, templates_dir='./templates'):
         self.templates_dir = templates_dir
@@ -21,9 +21,9 @@ class Renderer(object):
     def generate_ea_config(self, adm_context):
         return self._generate_config('ea_config.yaml.j2', adm_context)
 
-    def generate_ea_rules(self, usr_configs):
+    def generate_ea_rules(self, user_configs):
         ea_rules = []
-        for conf in usr_configs:
+        for conf in user_configs:
             rule_context = dict(conf)
             rule_context.update(get_env_vars_by_prefix())
             ea_rules.append(self._generate_config('ea_rule.yaml.j2', rule_context))

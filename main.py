@@ -3,10 +3,10 @@ import time
 
 from kubernetes import config
 import logging
-from generate_configs import Renderer
-from readers import LocalUsrConfigReader
-from readers import RemoteUsrConfigReader
-from readers import get_admin_config_file
+from config_generator import Renderer
+from config_readers import LocalUserConfigReader
+from config_readers import RemoteUserConfigReader
+from config_readers import get_admin_config_file
 
 
 logging.basicConfig(level=os.environ.get('LOG_LEVEL', logging.INFO))
@@ -27,9 +27,9 @@ def main():
         f.write(renderer.generate_ea_config(context))
 
     if local_run:
-        reader = LocalUsrConfigReader(os.path.join(config_dir, 'rules'))
+        reader = LocalUserConfigReader(os.path.join(config_dir, 'rules'))
     else:
-        reader = RemoteUsrConfigReader(config.load_incluster_config())
+        reader = RemoteUserConfigReader(config.load_incluster_config())
 
     while True:
         if not os.path.exists(user_rules_directory):

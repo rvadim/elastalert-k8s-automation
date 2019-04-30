@@ -43,4 +43,3 @@ class TestConfigGenerator:
                                                                      required_options[alert_type])
 
                 assert f'{alert_type}_config_name' not in config
-

@@ -15,12 +15,16 @@ run_every:
 
 alert_configs:
   email:
-    mail_1:
-      smtp_host: localhost
-      smtp_port: 25
-    mail_2:
-      smtp_host: localhost
-      smtp_port: 27
+    default: mail_1
+    configs:
+      mail_1:
+        smtp_host: localhost
+        smtp_port: 25
+      mail_2:
+        smtp_host: localhost
+        smtp_port: 27
   slack:
-    slack_1:
-      slack_webhook_url: https://XXXXX.slack.com/services/new/incoming-webhook
+    default: slack_1
+    configs:
+      slack_1:
+        slack_webhook_url: https://XXXXX.slack.com/services/new/incoming-webhook

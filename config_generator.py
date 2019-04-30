@@ -32,8 +32,17 @@ class Renderer:
                 alert_type = alert
                 alert_options = user_rule
 
+            if alert_type not in self.admin_context['alert_configs']:
+                continue
+
             config_name = alert_options[f'{alert_type}_config_name']
-            alert_config = self.admin_context['alert_configs'][alert_type][config_name]
+            alert_type_options = self.admin_context['alert_configs'][alert_type]
+
+            if config_name not in alert_type_options \
+                    or config_name == 'default':
+                config_name = alert_type_options['default']
+
+            alert_config = alert_type_options['configs'][config_name]
             alert_options.update(alert_config)
             del alert_options[f'{alert_type}_config_name']
 

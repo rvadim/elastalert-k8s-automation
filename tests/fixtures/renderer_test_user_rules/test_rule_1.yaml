@@ -9,7 +9,14 @@ alert:
   - email:
       email: test@gmail.com
       email_config_name: mail_2
+  - email:
+      email: test2@gmail.com
+      email_config_name: default
   - slack:
       slack_username_override: test_user
       slack_channel_override: test_channel
       slack_config_name: slack_1
+  - slack:
+      slack_username_override: test_user_2
+      slack_channel_override: test_channel_2
+      slack_config_name: incorrect_config_name

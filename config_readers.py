@@ -20,17 +20,25 @@ class BaseConfigReader:
     """
     def _read_user_rule(self, rule_yaml):
         """
-        Get raw yaml and validate it as user config file
-        :param rule_yaml: file to validate
-        :return: parsed and validated yaml
+        Parse user rule and return result if parsing was successful
+        :param rule_yaml: file to parse
+        :return: dictionary with parsing results
         """
         try:
             parsed_user_rule = yaml.safe_load(rule_yaml)
             return parsed_user_rule
         except yaml.YAMLError as e:
             log.error(f'Failed to parse configuration. {e}')
+        return None
 
     def _validate_user_rule(self, parsed_user_rule):
+        """
+        Validate given parsed config
+        :param parsed_user_rule:
+        :return:
+        """
+        if parsed_user_rule is None:
+            return None
         errors = list(validate_user_rule(parsed_user_rule))
         if len(errors) != 0:
             for error in errors:

@@ -7,6 +7,6 @@ alert:
   - slack
 
 email: example@gmail.com
-email_config_name: mail_1
+email_id: mail_1
 
-slack_config_name: slack_1
+slack_id: slack_1

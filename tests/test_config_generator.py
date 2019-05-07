@@ -42,4 +42,4 @@ class TestConfigGenerator:
                 assert TestConfigGenerator.contains_required_options(config,
                                                                      required_options[alert_type])
 
-                assert f'{alert_type}_config_name' not in config
+                assert f'{alert_type}_id' not in config

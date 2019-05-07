@@ -1,0 +1,19 @@
+alert:
+  - email:
+      email: example@gmail.com
+      email_config_name: mail_1
+  - email:
+      email: test@gmail.com
+      email_config_name: mail_2
+
+filter:
+- query:
+    query_string:
+      query: "document_type: login"
+
+another_filter:
+- query:
+    query_string:
+      query: "@message: *hihi*"
+
+

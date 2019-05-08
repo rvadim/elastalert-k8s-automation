@@ -1,0 +1,30 @@
+es_host: 127.0.0.1
+es_port: 9200
+es_password: "1234"
+
+rules_folder: ./test_user_rules
+
+buffer_time:
+    minutes: 15
+    seconds: 30
+
+writeback_index: elastalert_status
+
+run_every:
+    seconds: 30
+
+alert_configs:
+  email:
+    default: mail_1
+    configs:
+      mail_1:
+        smtp_host: localhost
+        smtp_port: 25
+      mail_2:
+        smtp_host: localhost
+        smtp_port: 27
+  slack:
+    default: slack_1
+    configs:
+      slack_1:
+        slack_webhook_url: https://XXXXX.slack.com/services/new/incoming-webhook

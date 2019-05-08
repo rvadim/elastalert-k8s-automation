@@ -22,9 +22,9 @@ def main():
     user_rules_directory = os.path.join(ea_config_path, 'rules')
     context['rules_folder'] = user_rules_directory
 
-    renderer = Renderer('./templates')
+    renderer = Renderer(context, './templates')
     with open(os.path.join(ea_config_path, 'config.yaml'), 'w') as f:
-        f.write(renderer.generate_ea_config(context))
+        f.write(renderer.generate_ea_config())
 
     if local_run:
         reader = LocalUserConfigReader(os.path.join(config_dir, 'rules'))

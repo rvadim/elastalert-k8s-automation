@@ -1,0 +1,12 @@
+name: test Rule
+es_host: localhost
+es_port: 9200
+
+index: test_index
+num_events: 2
+timeframe:
+    minutes: 1.5
+    hours: 24
+filter:
+- term:
+    test_field: "test"

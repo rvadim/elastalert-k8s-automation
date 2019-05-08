@@ -58,13 +58,11 @@ class RemoteUserConfigReader(BaseConfigReader):
     def __init__(self, kubernetes_configuration):
         self.kubernetes_configuration = kubernetes_configuration
 
-    def get_config_files(self):
+    def _get_configmap_list(self):
         """
-        Read configuration files from configmaps in all available namespaces
-        :return: list of user elastalert rules
+        Get configmaps in all available namespaces
+        :return: list of configmaps
         """
-        log.info('Reading users configuration files')
-
         api_instance = kubernetes.client.CoreV1Api(kubernetes.client.ApiClient(self.kubernetes_configuration))
         namespaces = api_instance.list_namespace()
         configmap_list = []
@@ -75,6 +73,16 @@ class RemoteUserConfigReader(BaseConfigReader):
                     api_instance.read_namespaced_config_map('elastalert-rules', namespace.metadata.name))
             except Exception as e:
                 log.warning(e)
+        return configmap_list
+
+    def get_config_files(self):
+        """
+        Read configuration files from configmaps
+        :return: list of user elastalert rules
+        """
+        log.info('Reading users configuration files')
+
+        configmap_list = self._get_configmap_list()
 
         user_configs = []
         for configmap in configmap_list:

@@ -1,0 +1,16 @@
+name: test Rule
+es_host: localhost
+es_port: 9200
+
+type: frequency
+index: test_index
+num_events: 4
+
+timeframe:
+    minutes: 1.5
+    hours: 24
+
+alert:
+- "email"
+email:
+- "vkujantsev@gmail.com"

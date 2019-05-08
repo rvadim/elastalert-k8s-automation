@@ -15,7 +15,7 @@ The application uses two types of configuration files to configure work of Elast
 
 The application collects both types of configuration files and generates configuration for ElastAlert.
 
-##Installing and configuring
+## Installing and configuring
 Clone elastlert-k8s-automation project:
 ````
 $ git clone https://github.com/rvadim/elastalert-k8s-automation.git
@@ -116,9 +116,11 @@ For more information on user rules for ElastAlert, see the documentation:
 
 https://elastalert.readthedocs.io/en/latest/ruletypes.html
 
-##Running the application
-###Local run 
-###Remote run
+## Running the application
+
+### Local run 
+
+### Remote run
 To run elastlert-k8s-automation remotely, it is needed to be deployed in Kubernetes cluster.<br/>
 To do that build and upload image of elastlert-k8s-automation to the repository by executing the following commands:
 ```

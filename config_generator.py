@@ -1,9 +1,14 @@
 from jinja2 import Environment, FileSystemLoader
 from config import get_env_vars_by_prefix
+import yaml
 
 
 def get_env(templates_dir):
     return Environment(loader=FileSystemLoader(templates_dir))
+
+
+def yaml_filter(dict_val):
+    return yaml.dump(dict_val, default_flow_style=False)
 
 
 class Renderer:
@@ -13,7 +18,7 @@ class Renderer:
     def __init__(self, admin_context, templates_dir='./templates'):
         self.templates_dir = templates_dir
         self.env = get_env(self.templates_dir)
-        self.admin_context = admin_context
+        self.env.filters['toyaml'] = yaml_filter
 
     def _generate_config(self, template_name, context):
         template = self.env.get_template(template_name)

@@ -16,27 +16,34 @@ num_events: {{num_events}}
 
 {% if filter is defined %}
 filter:
-{% for filt in filter %}
-{% for type, map in filt.items() %}
-- {{type}}:
-{% for key, val in map.items() %}
-    {{key}}: {{val}}
-{% endfor %}
-{% endfor %}
-{% endfor %}
+{{filter | toyaml}}
 {% endif %}
 
 alert:
-{% for item in alert%}
-- {{item}}
-{% endfor %}
+{{alert | toyaml}}
 
+
+{# email start #}
 {% if "email" in alert %}
+{% if email is sequence and not email is string %}
 email:
-{% for item in email%}
-- {{item}}
-{% endfor %}
+{{email | toyaml}}
+{% else %}
+email: {{email}}
 {% endif %}
+
+{%if email_config_name is defined %}
+{% if email_config_name is sequence and not email_config_name is string%}
+email_config_name:
+{{email_config_name | toyaml}}
+{% else %}
+email_config_name: {{email_config_name}}
+{% endif %}
+{% endif %}
+
+{% endif %}
+{# email end #}
+
 
 {% if "telegram" in alert %}
 telegram_bot_token: {{telegram_bot_token}}

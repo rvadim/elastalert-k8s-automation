@@ -110,7 +110,7 @@ for example, email). {alert}_id determines which system settings specified by th
 alert. If {alert}_id is not specified or refers to a nonexistent system settings, the default settings will be used.
 Examples of user rules can be found in
 
-/tests/fixtures/renderer_test_user_rules.yaml
+/tests/fixtures/renderer_test_user_rules
 
 For more information on user rules for ElastAlert, see the documentation:
 

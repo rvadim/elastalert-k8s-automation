@@ -18,6 +18,7 @@ class Renderer:
     def __init__(self, admin_context, templates_dir='./templates'):
         self.templates_dir = templates_dir
         self.env = get_env(self.templates_dir)
+        self.admin_context = admin_context
         self.env.filters['toyaml'] = yaml_filter
 
     def _generate_config(self, template_name, context):

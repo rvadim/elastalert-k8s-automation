@@ -96,9 +96,28 @@ information can be found in the documentation:
 
 https://elastalert.readthedocs.io/en/latest/ruletypes.html#alerts
 
-Example of general alert settings in the admin config can be found in
+Example of general alert settings in the admin config:
 
-/tests/fixtures/renderer_test_config.yaml
+```yaml
+... # Other admin config options
+
+alert_configs:
+  email:
+    default: mail_1
+    configs:
+      mail_1:
+        smtp_host: localhost
+        smtp_port: 25
+      mail_2:
+        smtp_host: localhost
+        smtp_port: 27
+  slack:
+    default: slack_1
+    configs:
+      slack_1:
+        slack_webhook_url: https://XXXXX.slack.com/services/new/incoming-webhook
+
+```
 
 ### User rules configuration files
 User rules should be set in the configmap named “elastalert-rules”. Each such configmap must contain a set of named rules.
@@ -108,9 +127,39 @@ Rules are created in the format of ElastAlert user rules and can contain any val
 In addition, for alerts there is a special option {alert}_id (where {alert} is the type of alert supported by ElastAlert, 
 for example, email). {alert}_id determines which system settings specified by the administrator will be used for this 
 alert. If {alert}_id is not specified or refers to a nonexistent system settings, the default settings will be used.
-Examples of user rules can be found in
+Some examples of user rules:
 
-/tests/fixtures/renderer_test_user_rules
+```yaml
+alert:
+  - email
+  - slack
+
+email: example@gmail.com
+email_id: mail_1
+
+slack_id: slack_1
+```
+
+```yaml
+alert:
+  - email:
+      email: example@gmail.com
+      email_id: mail_1
+  - email:
+      email: example2@gmail.com
+      email_id: mail_2
+  - email:
+      email: example3@gmail.com
+      email_id: default
+  - slack:
+      slack_username_override: some_user
+      slack_channel_override: some_channel
+      slack_id: slack_1
+  - slack:
+      slack_username_override: another_user
+      slack_channel_override: another_channel
+      slack_id: incorrect_id
+```
 
 For more information on user rules for ElastAlert, see the documentation:
 

@@ -127,20 +127,13 @@ Rules are created in the format of ElastAlert user rules and can contain any val
 In addition, for alerts there is a special option {alert}_id (where {alert} is the type of alert supported by ElastAlert, 
 for example, email). {alert}_id determines which system settings specified by the administrator will be used for this 
 alert. If {alert}_id is not specified or refers to a nonexistent system settings, the default settings will be used.
-Some examples of user rules:
+Example of user rules:
+
 
 ```yaml
-alert:
-  - email
-  - slack
+index: example_index
+type: any
 
-email: example@gmail.com
-email_id: mail_1
-
-slack_id: slack_1
-```
-
-```yaml
 alert:
   - email:
       email: example@gmail.com
@@ -150,7 +143,7 @@ alert:
       email_id: mail_2
   - email:
       email: example3@gmail.com
-      email_id: default
+      email_id: default         # In this case the default settings will be used
   - slack:
       slack_username_override: some_user
       slack_channel_override: some_channel
@@ -158,7 +151,7 @@ alert:
   - slack:
       slack_username_override: another_user
       slack_channel_override: another_channel
-      slack_id: incorrect_id
+      slack_id: incorrect_id    # If the {alert}_id is incorrect, the default settings will be used
 ```
 
 For more information on user rules for ElastAlert, see the documentation:

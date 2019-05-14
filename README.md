@@ -7,7 +7,7 @@ applications that store its logs in ElasticSearch.
 There are two modes for running this application: the local mode and the remote mode.
 * Remote mode is intended for running application in Kubernetes cluster where ElastAlert 
 is started.
-* Local mode allows to run application without deployment in Kubernetes. 
+* Local mode allows to run application without deployment in Kubernetes. It was created for testing purposes.
 
 The application uses two types of configuration files to configure work of ElastAlert:
 * Administrator configuration file with general properties and notification options.
@@ -16,10 +16,16 @@ The application uses two types of configuration files to configure work of Elast
 The application collects both types of configuration files and generates configuration for ElastAlert.
 
 ## Installing and configuring
-Clone elastlert-k8s-automation project:
+* To run application remotely, you have to install docker image in Kubernetes:
 ````
+$ kubectl apply -f <URL to file with deployment and config>
+````
+
+* To run application locally, clone elastlert-k8s-automation project:<br/>
+``
 $ git clone https://github.com/rvadim/elastalert-k8s-automation.git
-````
+``<br/>
+And run `main.py` file after configuring application.  
 
 Application can be configured by setting some environment variables:
 * `LOCAL_RUN`: if specified by value `1`, the Local mode will be chosen. 
@@ -36,26 +42,32 @@ Otherwise generated ElastAlert configuration file will be placed in "./config/" 
 The administrator configuration file must contain main options for ElastAlert and must have following structure:
 ```yaml
 es_host: # Address of an ElasticSearch cluster
-
 es_port: # Port for es_host
 
-rules_folder: # Directory with ElastAlert rules
-
-run_every: # Frequency of queries to ElasticSearch
-  
 buffer_time: # Size of the query window, stretching backwards from the time each query is run. 
             #This value is ignored for rules where use_count_query or use_terms_query is set to true.
 
-writeback_index: # ElasticSearch index for ElastAlert logs 
+writeback_index: # ElasticSearch index for ElastAlert logs
+
+run_every: # Frequency of queries to ElasticSearch
+
+alert_configs:
+    ...
+    
+# Optional properties
 ```
 
-Example of administrator configuration file can be found in 
+All the properties listed in this administrator configuration template (except `alert_configs`) are necessary for 
+running ElastAlert. These properties  have the same name and meaning as ElastAlert properties themselves.  
 
-/tests/fixtures/valid_config.yaml
-
-More information about configuring ElastAlert, can be found in official documentation:
+More information about these and optional properties for configuring ElastAlert, can be found in official documentation:
 
 https://elastalert.readthedocs.io/en/latest/running_elastalert.html
+
+`alert_configs` section is described below.
+
+Example of administrator configuration file can be found 
+[here](https://github.com/rvadim/elastalert-k8s-automation/blob/master/examples/admin_config_example.yaml). 
 
 *Note: ElastAlert properties such as passwords and alerter tokens are not expected to be set in configuration files 
 due to sequrity issues. This data is supposed to be taken from application environment.*

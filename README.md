@@ -16,10 +16,10 @@ The application uses two types of configuration files to configure work of Elast
 The application collects both types of configuration files and generates configuration for ElastAlert.
 
 ## Installing and configuring
-* To run application remotely, you have to install docker image in Kubernetes:
-````
+* To run application remotely, you have to install docker image in Kubernetes:<br/>
+``
 $ kubectl apply -f <URL to file with deployment and config>
-````
+``
 
 * To run application locally, clone elastlert-k8s-automation project:<br/>
 ``
@@ -57,8 +57,8 @@ alert_configs:
 # Optional properties
 ```
 
-All the properties listed in this administrator configuration template (except `alert_configs`) are necessary for 
-running ElastAlert. These properties  have the same name and meaning as ElastAlert properties themselves.  
+All the properties listed in this administrator configuration template are necessary for 
+running ElastAlert. These properties have the same name and meaning as ElastAlert properties themselves (except `alert_configs`).  
 
 More information about these and optional properties for configuring ElastAlert, can be found in official documentation:
 

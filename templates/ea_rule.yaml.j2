@@ -6,6 +6,17 @@ index: {{index}}
 
 type: {{type}}
 
+{% if realert is defined %}
+realert:
+{% for timeunit, timevalue in realert.items() %}
+    {{timeunit}}: {{timevalue}}
+{% endfor %}
+{%  endif %}
+
+{% if use_strftime_index is defined %}
+use_strftime_index: {{use_strftime_index}}
+{% endif %}
+
 {% if type == "frequency" %}
 timeframe:
 {% for timeunit, timevalue in timeframe.items() %}
@@ -21,31 +32,3 @@ filter:
 
 alert:
 {{alert | toyaml}}
-
-
-{# email start #}
-{% if "email" in alert %}
-{% if email is sequence and not email is string %}
-email:
-{{email | toyaml}}
-{% else %}
-email: {{email}}
-{% endif %}
-
-{%if email_config_name is defined %}
-{% if email_config_name is sequence and not email_config_name is string%}
-email_config_name:
-{{email_config_name | toyaml}}
-{% else %}
-email_config_name: {{email_config_name}}
-{% endif %}
-{% endif %}
-
-{% endif %}
-{# email end #}
-
-
-{% if "telegram" in alert %}
-telegram_bot_token: {{telegram_bot_token}}
-telegram_room_id: {{telegram_room_id}}
-{% endif %}

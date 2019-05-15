@@ -27,7 +27,7 @@ spec:
       - name: user-rules-dir
         emptyDir: {}
       containers:
-      - image: dkondyrev/elastalert-k8s-automation:latest
+      - image: rvadim/elastalert-k8s-automation:latest
         imagePullPolicy: Always
         name: elastalert-k8s
         env:
@@ -43,7 +43,7 @@ spec:
         - mountPath: /config/rules
           name: user-rules-dir
 
-      - image: dkondyrev/elastalert:latest
+      - image: rvadim/elastalert-k8s-automation:elastalert-latest
         imagePullPolicy: IfNotPresent
         name: elastalert
         volumeMounts:
@@ -55,4 +55,26 @@ spec:
           - elastalert.elastalert
           - --config
           - /config/config.yaml
+...
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ea-config
+data:
+  config.yaml: |
+    es_host: 127.0.0.1
+    es_port: 9200
+    es_password: "1234"
+
+    rules_folder: /config/rules
+
+    buffer_time:
+        minutes: 15
+        seconds: 30
+
+    writeback_index: elastalert_status
+
+    run_every:
+        seconds: 30
 

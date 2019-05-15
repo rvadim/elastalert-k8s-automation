@@ -44,7 +44,7 @@ class Renderer:
             config_name = alert_options[f'{alert_type}_id']
             alert_type_options = self.admin_context['alert_configs'][alert_type]
 
-            if config_name not in alert_type_options \
+            if config_name not in alert_type_options['configs'] \
                     or config_name == 'default':
                 config_name = alert_type_options['default']
 

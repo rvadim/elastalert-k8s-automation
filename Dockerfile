@@ -11,6 +11,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 ADD main.py ./
 ADD config.py ./
+ADD config_generator.py ./
+ADD config_readers.py ./
 ADD schemas ./schemas
 ADD templates ./templates
 

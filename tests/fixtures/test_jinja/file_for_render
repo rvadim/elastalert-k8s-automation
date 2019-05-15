@@ -1,10 +1,18 @@
 alert:
-  - email:
-      email: example@gmail.com
-      email_config_name: mail_1
-  - email:
-      email: test@gmail.com
-      email_config_name: mail_2
+ - email:
+     from_addr: "no-reply@example.com"
+     email: "customer@example.com"
+ - email:
+     from_addr: "elastalert@example.com"
+     email: "devs@example.com"
+ - slack:
+     slack_username_override: test_user
+     slack_channel_override: test_channel
+     slack_id: slack_1
+ - slack:
+     slack_username_override: test_user_2
+     slack_channel_override: test_channel_2
+     slack_id: incorrect_id
 
 filter:
 - query:

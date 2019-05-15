@@ -16,9 +16,14 @@ The application uses two types of configuration files to configure work of Elast
 The application collects both types of configuration files and generates configuration for ElastAlert.
 
 ## Installing and configuring
-* To run application remotely, you have to install docker image in Kubernetes:<br/>
+* To run application remotely, you have to download deployment file by executing the command<br/>
 ``
-$ kubectl apply -f <URL to file with deployment and config>
+$ wget https://github.com/rvadim/elastalert-k8s-automation/raw/master/deploy/deploy.yaml
+``
+Then replace the data in the last section of the file with your administrator configuration file.
+And install docker image in Kubernetes:<br/>
+``
+$ kubectl apply -f <path to file with deployment and config>
 ``
 
 * To run application locally, clone elastlert-k8s-automation project:<br/>
@@ -139,7 +144,7 @@ Rules are created in the format of ElastAlert user rules and can contain any val
 In addition, for alerts there is a special option {alert}_id (where {alert} is the type of alert supported by ElastAlert, 
 for example, email). {alert}_id determines which system settings specified by the administrator will be used for this 
 alert. If {alert}_id is not specified or refers to a nonexistent system settings, the default settings will be used.
-Example of user rules:
+Example of user rule:
 
 
 ```yaml

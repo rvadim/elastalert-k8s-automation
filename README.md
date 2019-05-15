@@ -16,20 +16,25 @@ The application uses two types of configuration files to configure work of Elast
 The application collects both types of configuration files and generates configuration for ElastAlert.
 
 ## Installing and configuring
-* To run application remotely, you have to download deployment file by executing the command<br/>
+* To run application remotely, you have to download deployment file by executing the command
+<br/><br/>
 ``
 $ wget https://github.com/rvadim/elastalert-k8s-automation/raw/master/deploy/deploy.yaml
 ``
+<br/><br/>
 Then replace the data in the last section of the file with your administrator configuration file.
-And install docker image in Kubernetes:<br/>
+And install docker image in Kubernetes:
+<br/><br/>
 ``
 $ kubectl apply -f <path to file with deployment and config>
 ``
-
-* To run application locally, clone elastlert-k8s-automation project:<br/>
+<br/><br/>
+* To run application locally, clone elastlert-k8s-automation project:
+<br/><br/>
 ``
 $ git clone https://github.com/rvadim/elastalert-k8s-automation.git
-``<br/>
+``
+<br/><br/>
 And run `main.py` file after configuring application.  
 
 Application can be configured by setting some environment variables:

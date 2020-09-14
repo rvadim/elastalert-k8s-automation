@@ -15,11 +15,15 @@ log = logging.getLogger(__name__)
 
 def main():
     local_run = os.environ.get('LOCAL_RUN') == '1'
+    log.info(f'Local run: {local_run}')
     config_dir = os.environ.get('CONFIG_DIR', './eka/')
+    log.info(f'CONFIG_DIR: {config_dir}')
     ea_config_path = os.environ.get('ELASTALERT_CONFIG_DIR', './config/')
+    log.info(f'ELASTALERT_CONFIG_DIR: {ea_config_path}')
     context = get_admin_config_file(os.path.join(config_dir, 'config.yaml'))
 
     user_rules_directory = os.path.join(ea_config_path, 'rules')
+    log.info(f'user_rules_directory: {user_rules_directory}')
     context['rules_folder'] = user_rules_directory
 
     renderer = Renderer(context, './templates')
@@ -29,11 +33,12 @@ def main():
     if local_run:
         reader = LocalUserConfigReader(os.path.join(config_dir, 'rules'))
     else:
-        reader = RemoteUserConfigReader(config.load_incluster_config())
+        config.load_kube_config()
+        reader = RemoteUserConfigReader()
 
     while True:
         if not os.path.exists(user_rules_directory):
-            os.makedirs(user_rules_directory, 755)
+            os.makedirs(user_rules_directory, 0o755)
         # Drop all files from user rules directory
         for f in os.listdir(user_rules_directory):
             f_path = os.path.join(user_rules_directory, f)

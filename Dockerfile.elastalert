@@ -1,10 +1,11 @@
-FROM python:2.7
+FROM python:3.6
 
-LABEL description="Python 2.7 with elastalert installed"
-LABEL maintainer="Dmitriy Kondyrev (dkondyrev@gmail.com)"
-LABEL source="https://github.com/rvadim/elastalert-k8s-automation"
+LABEL   description="Python 3.6 with elastalert installed" \
+        maintainer="Dmitriy Kondyrev (dkondyrev@gmail.com)" \
+        source="https://github.com/rvadim/elastalert-k8s-automation"
 
-RUN pip install --no-cache-dir  elasticsearch==5.5.3 urllib3==1.24 elastalert
+RUN pip install --upgrade pip && \
+    pip install --use-feature=2020-resolver --no-cache-dir elastalert==0.2.4 elasticsearch==7.0.0
 
 CMD ["/bin/bash", "-c", "elastalert-create-index --config /config/config.yaml && elastalert --verbose --config /config/config.yaml"]
 

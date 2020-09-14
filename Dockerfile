@@ -1,8 +1,16 @@
 FROM python:3.7-slim
 
-LABEL description="Elastalert automation configuration"
-LABEL maintainer="Dmitriy Kondyrev (dkondyrev@gmail.com)"
-LABEL source="https://github.com/rvadim/elastalert-k8s-automation"
+LABEL   description="Elastalert automation configuration" \
+        maintainer="Dmitriy Kondyrev (dkondyrev@gmail.com)" \
+        source="https://github.com/rvadim/elastalert-k8s-automation"
+
+RUN groupadd --gid 1024 kubernetes \
+    && useradd \
+        --uid 1024 \
+        --gid 1024 \
+        --create-home \
+        --shell /bin/bash \
+        kubernetes
 
 WORKDIR /home/kubernetes
 

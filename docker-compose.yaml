@@ -3,11 +3,11 @@ version: '3'
 services:
   elastalert-k8s:
     build: .
-    image: rvadim/elastalert-k8s-automation:latest
+    image: ${CONTAINER_REGISTRY_PATH:-rvadim/elastalert-k8s-automation}:${BUILD_NUMBER:-latest}
     environment:
       LOG_LEVEL: DEBUG
       LOCAL_RUN: '1'
-      EA_CONFIG_DIR: /config/
+      ELASTALERT_CONFIG_DIR: /config/
       CONFIG_DIR: /local/
     volumes:
       - './local/:/local'
@@ -18,7 +18,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.elastalert
-    image: rvadim/elastalert-k8s-automation:elastalert-latest
+    image: ${CONTAINER_REGISTRY_PATH:-rvadim/elastalert-k8s-automation}:elastalert-${BUILD_NUMBER:-latest}
     volumes:
       - 'data:/config/'
 #  es:

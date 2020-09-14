@@ -55,15 +55,15 @@ class RemoteUserConfigReader(BaseConfigReader):
     """
     Class for reading user configuration files in kubernetes cluster
     """
-    def __init__(self, kubernetes_configuration):
-        self.kubernetes_configuration = kubernetes_configuration
+    def __init__(self):
+        pass
 
     def _get_configmap_list(self):
         """
         Get configmaps in all available namespaces
         :return: list of configmaps
         """
-        api_instance = kubernetes.client.CoreV1Api(kubernetes.client.ApiClient(self.kubernetes_configuration))
+        api_instance = kubernetes.client.CoreV1Api()
         namespaces = api_instance.list_namespace()
         configmap_list = []
 

@@ -25,6 +25,5 @@ class TestReader:
         with patch('config_readers.RemoteUserConfigReader._get_configmap_list') \
                 as get_configmap_list:
             get_configmap_list.return_value = [configmap_mock]
-            cluster_config_dummy = Mock()
-            config_reader = config_readers.RemoteUserConfigReader(cluster_config_dummy)
+            config_reader = config_readers.RemoteUserConfigReader()
             assert len(config_reader.get_config_files()) == 2
